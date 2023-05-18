@@ -2,6 +2,7 @@ plugins {
     id 'application'
     id 'checkstyle'
     id 'jacoco'
+    id 'com.adarshr.test-logger' version '3.2.0'
 }
 
 repositories {
@@ -13,9 +14,17 @@ compileJava {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    testImplementation(
+            'org.assertj:assertj-core:3.24.2',
+            'org.junit.jupiter:junit-jupiter:5.9.1'
+    )
 
-    implementation 'com.google.guava:guava:31.1-jre'
+    implementation (
+            'com.google.guava:guava:31.1-jre',
+            'info.picocli:picocli:4.6.3'
+    )
+
+    annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
 }
 
 application {
@@ -26,6 +35,14 @@ jacocoTestReport {
     reports {
         xml.required = true
     }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+testlogger {
+    showStandardStreams true
 }
 
 checkstyle {

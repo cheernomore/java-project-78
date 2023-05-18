@@ -1,0 +1,48 @@
+package hexlet.code;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class StringSchema {
+    private boolean isRequired = false;
+    private int hasMinLength = 0;
+    private Map<String, String> isContains = new HashMap<>();
+
+    public StringSchema() {
+    }
+
+    public StringSchema required() {
+        this.isRequired = true;
+        return this;
+    }
+
+    public StringSchema minLength(int minLength) {
+        this.hasMinLength = minLength;
+        return this;
+    }
+
+    public StringSchema contains(String text) {
+        this.isContains.putIfAbsent(text, text);
+        return this;
+    }
+
+    boolean isValid(String message) {
+
+        if (this.isRequired && (message == null || message.equals(""))) {
+            return false;
+        }
+
+        if (this.hasMinLength > 0 && message.length() < this.hasMinLength) {
+            return false;
+        }
+
+        for (Map.Entry<String, String> entry: isContains.entrySet()) {
+
+            if (message.contains(entry.getValue())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
