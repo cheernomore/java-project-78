@@ -5,7 +5,10 @@ import java.util.Map;
 public class MapSchema extends BaseSchema {
 
     private boolean isRequired = false;
-    private int size;
+    private int size = 0;
+
+    private Map<String, BaseSchema> shapes;
+
     public MapSchema() {
     }
 
@@ -14,8 +17,13 @@ public class MapSchema extends BaseSchema {
         return this;
     }
 
-    public MapSchema sizeof(int size) {
-        this.size = size;
+    public MapSchema sizeof(int setSize) {
+        this.size = setSize;
+        return this;
+    }
+
+    public MapSchema shape(Map<String, BaseSchema> shape) {
+        this.shapes = shape;
         return this;
     }
 
@@ -28,20 +36,39 @@ public class MapSchema extends BaseSchema {
             return true;
         }
 
-        if (input instanceof Map) {
-            Map<?, ?> message = (Map<?, ?>) input;
+        if (this.shapes == null) {
+            if (input instanceof Map) {
+                Map<?, ?> message = (Map<?, ?>) input;
 
-            for (Map.Entry<?, ?> entry : message.entrySet()) {
-                if (!(entry.getKey() instanceof String) || !(entry.getValue() instanceof String)) {
+                for (Map.Entry<?, ?> entry : message.entrySet()) {
+                    if (!(entry.getKey() instanceof String) || !(entry.getValue() instanceof String)) {
+                        return false;
+                    }
+                }
+
+                if (this.size > 0 && message.size() < this.size) {
                     return false;
                 }
-            }
-
-            if (message.size() < this.size) {
+            } else {
                 return false;
             }
         } else {
-            return false;
+            Map<?, ?> message = (Map<?, ?>) input;
+            // Перебираем все ключи в shape
+            for (String key : shapes.keySet()) {
+                // Проверяем, есть ли такой ключ в input
+                if (!message.containsKey(key)) {
+                    continue;
+                }
+
+                // Если есть, то мы берем соответствующую схему для валидации
+                BaseSchema schema = shapes.get(key);
+
+                // И валидируем значение ключа с помощью этой схемы
+                if (!schema.isValid(message.get(key))) {
+                    return false;
+                }
+            }
         }
 
         return true;

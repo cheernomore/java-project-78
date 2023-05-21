@@ -1,7 +1,5 @@
 package hexlet.code;
 
-import java.util.Map;
-
 public class NumberSchema extends BaseSchema {
 
     private boolean isRequired = false;
