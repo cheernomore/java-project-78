@@ -3,10 +3,10 @@ package hexlet.code;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StringSchema {
+public class StringSchema extends BaseSchema {
     private boolean isRequired = false;
     private int hasMinLength = 0;
-    private Map<String, String> isContains = new HashMap<>();
+    private final Map<String, String> isContains = new HashMap<>();
 
     public StringSchema() {
     }
@@ -26,7 +26,9 @@ public class StringSchema {
         return this;
     }
 
-    boolean isValid(String message) {
+    @Override
+    boolean isValid(Object input) {
+        String message = (String) input;
 
         if (this.isRequired && (message == null || message.equals(""))) {
             return false;
