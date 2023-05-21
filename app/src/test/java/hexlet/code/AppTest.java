@@ -2,6 +2,9 @@ package hexlet.code;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +35,7 @@ class AppTest {
     }
 
     @Test
-    void checkValidIntegerInputs() {
+    void checkValidIntegerInputs(){
         Validator validator = new Validator();
         NumberSchema numberSchema = validator.number();
         Range range = new Range(10, 29);
@@ -48,5 +51,28 @@ class AppTest {
         assertThat(numberSchema.isValid(30)).isEqualTo(true);
         numberSchema.range(range);
         assertThat(numberSchema.isValid(30)).isEqualTo(false);
+    }
+
+    @Test
+    void checkValidMapInputs() {
+        Validator v = new Validator();
+
+        MapSchema schema = v.map();
+
+        schema.isValid(null); // true
+
+        schema.required();
+
+        schema.isValid(null); // false
+        schema.isValid(new HashMap()); // true
+        Map<String, String> data = new HashMap<>();
+        data.put("key1", "value1");
+        schema.isValid(data); // true
+
+        schema.sizeof(2);
+
+        schema.isValid(data);  // false
+        data.put("key2", "value2");
+        schema.isValid(data); // true
     }
 }
