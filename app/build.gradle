@@ -28,7 +28,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'java.project.App'
+    mainClass = 'src.main.java.hexlet.code.App'
 }
 
 jacocoTestReport {
