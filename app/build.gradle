@@ -28,7 +28,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'src.main.java.hexlet.code.App'
+    mainClass = 'hexlet.code.App'
 }
 
 jacocoTestReport {
@@ -44,6 +44,11 @@ test {
 testlogger {
     showStandardStreams true
 }
+
+jacoco {
+    toolVersion = '0.8.8'
+}
+
 
 checkstyle {
     toolVersion '9.2.1'

@@ -1,9 +1,7 @@
-checkstyle:
-	cd app && ./gradlew checkstyleTest && cd ..
-	cd app && ./gradlew checkstyleMain && cd ..
-
-test:
-	cd app && ./gradlew test && cd ..
+build:
+	make -C app build
 
 report:
-	cd app && ./gradlew jacocoTestReport && cd ..
+	make -C app report
+
+.PHONY: build
