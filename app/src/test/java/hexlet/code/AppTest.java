@@ -63,7 +63,7 @@ class AppTest {
         schema.required();
 
         schema.isValid(null); // false
-        schema.isValid(new HashMap()); // true
+        schema.isValid(new HashMap<>()); // true
         Map<String, String> data = new HashMap<>();
         data.put("key1", "value1");
         schema.isValid(data); // true
