@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class MapSchema extends BaseSchema {
@@ -7,7 +8,7 @@ public class MapSchema extends BaseSchema {
     private boolean isRequired = false;
     private int size = 0;
 
-    private Map<String, BaseSchema> shapes;
+    private Map<String, BaseSchema> shapes = new HashMap<>();
 
     public MapSchema() {
     }
@@ -36,7 +37,7 @@ public class MapSchema extends BaseSchema {
             return true;
         }
 
-        if (this.shapes == null) {
+        if (this.shapes.size() == 0) {
             if (input instanceof Map) {
                 Map<?, ?> message = (Map<?, ?>) input;
 
@@ -54,17 +55,14 @@ public class MapSchema extends BaseSchema {
             }
         } else {
             Map<?, ?> message = (Map<?, ?>) input;
-            // Перебираем все ключи в shape
+
             for (String key : shapes.keySet()) {
-                // Проверяем, есть ли такой ключ в input
                 if (!message.containsKey(key)) {
                     continue;
                 }
 
-                // Если есть, то мы берем соответствующую схему для валидации
                 BaseSchema schema = shapes.get(key);
 
-                // И валидируем значение ключа с помощью этой схемы
                 if (!schema.isValid(message.get(key))) {
                     return false;
                 }
