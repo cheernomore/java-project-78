@@ -42,17 +42,23 @@ jacocoTestReport {
 
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
 }
 
 testlogger {
     showStandardStreams true
 }
-
-jacoco {
-    toolVersion = '0.8.8'
-}
-
 
 checkstyle {
     toolVersion '9.2.1'
