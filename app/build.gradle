@@ -26,10 +26,6 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
-application {
-    mainClass = 'hexlet.code.App'
-}
-
 run {
     standardInput = System.in
 }
@@ -38,23 +34,12 @@ jacocoTestReport {
     dependsOn test
     reports {
         xml.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
 
 test {
     useJUnitPlatform()
-}
-
-jacocoTestReport {
-    dependsOn test
-}
-
-jacocoTestReport {
-    reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-    }
 }
 
 allure {
