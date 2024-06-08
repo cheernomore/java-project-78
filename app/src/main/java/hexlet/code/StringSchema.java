@@ -30,7 +30,7 @@ public class StringSchema extends BaseSchema {
     boolean isValid(Object input) {
         String message = (String) input;
 
-        if (this.isRequired && (message == null || message.equals(""))) {
+        if (this.isRequired && (message == null || message.isEmpty())) {
             return false;
         }
 
@@ -39,10 +39,7 @@ public class StringSchema extends BaseSchema {
         }
 
         for (Map.Entry<String, String> entry: isContains.entrySet()) {
-
-            if (message.contains(entry.getValue())) {
-                return false;
-            }
+            return message.contains(entry.getValue());
         }
 
         return true;

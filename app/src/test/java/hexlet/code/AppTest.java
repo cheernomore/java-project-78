@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -9,31 +10,48 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class AppTest {
     @Test
-    void checkValidStringInputs() {
+    @DisplayName("Проверка проверяемости длины строки")
+    void validVerifyStringLength() {
         Validator validator = new Validator();
         StringSchema stringSchema = validator.string();
-        String testLessThanLength10 = "Score!";
+        String testMoreThan10Char = "We come for you. No chances";
+        String testLessThan10Char = "We";
         int minLength = 10;
-        String sentenceToCheckContainsWords = "The Sun is rising. My shadow is getting shower";
-        String stopWord = "Sun";
-        String emptyString = "";
 
-        assertThat(stringSchema.isValid(null)).isEqualTo(true);
-        assertThat(stringSchema.isValid(emptyString)).isEqualTo(true);
-        stringSchema.required();
-        assertThat(stringSchema.isValid(null)).isEqualTo(false);
-        assertThat(stringSchema.isValid(emptyString)).isEqualTo(false);
-
-        assertThat(stringSchema.isValid(testLessThanLength10)).isEqualTo(true);
+        assertThat(stringSchema.isValid(testLessThan10Char)).isEqualTo(true);
         stringSchema.minLength(minLength);
-        assertThat(stringSchema.isValid(testLessThanLength10)).isEqualTo(false);
-
-        assertThat(stringSchema.isValid(sentenceToCheckContainsWords)).isEqualTo(true);
-        stringSchema.contains(stopWord);
-        assertThat(stringSchema.isValid(sentenceToCheckContainsWords)).isEqualTo(false);
+        assertThat(stringSchema.isValid(testMoreThan10Char)).isEqualTo(true);
+        assertThat(stringSchema.isValid(testLessThan10Char)).isEqualTo(false);
     }
 
     @Test
+    @DisplayName("Проверка проверяемости строки на заполненность")
+    void validVerifyStringRequired() {
+        Validator validator = new Validator();
+        StringSchema stringSchema = validator.string();
+        String testMoreThan10Char = "";
+
+        assertThat(stringSchema.isValid(testMoreThan10Char)).isEqualTo(true);
+        stringSchema.required();
+        assertThat(stringSchema.isValid(testMoreThan10Char)).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("Проверка проверяемости строки на вхождение")
+    void validVerifyStringStopWord() {
+        Validator validator = new Validator();
+        StringSchema stringSchema = validator.string();
+        String sentenceWithStopWord = "We come for you. No chances";
+        String sentenceWithoutStopWord = "We for you. No chances";
+
+        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(true);
+        stringSchema.contains("come");
+        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(false);
+        assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("Набор проверок для валидатора чисел")
     void checkValidIntegerInputs() {
         Validator validator = new Validator();
         NumberSchema numberSchema = validator.number();
@@ -53,6 +71,7 @@ class AppTest {
     }
 
     @Test
+    @DisplayName("Набор проверок для валидатора Map")
     void checkValidMapInputs() {
         Validator v = new Validator();
 
@@ -76,6 +95,7 @@ class AppTest {
     }
 
     @Test
+    @DisplayName("Набор проверок для валидатора NestedMap")
     void checkValidMapInputsWithNested() {
         Validator v = new Validator();
         MapSchema schema = v.map();
