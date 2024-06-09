@@ -6,6 +6,11 @@ plugins {
     id 'io.qameta.allure' version '2.11.2'
 }
 
+application {
+    mainClassName = 'hexlet.code.App' // Укажите основной класс вашего приложения
+}
+
+
 repositories {
     mavenCentral()
 }
