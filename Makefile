@@ -1,7 +1,7 @@
+.PHONY: build report
+
 build:
-	make -C app build --stacktrace
+	make -C app build
 
 report:
 	make -C app report
-
-.PHONY: build
