@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AppTest {
+class ApplicationTest {
     @Test
     @DisplayName("Проверка проверяемости длины строки")
     void validVerifyStringLength() {
