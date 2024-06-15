@@ -8,10 +8,10 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ApplicationTest {
+public class ApplicationTest {
     @Test
     @DisplayName("Проверка проверяемости длины строки")
-    void validVerifyStringLength() {
+    public void validVerifyStringLength() {
         Validator validator = new Validator();
         StringSchema stringSchema = validator.string();
         String testMoreThan10Char = "We come for you. No chances";
@@ -26,7 +26,7 @@ class ApplicationTest {
 
     @Test
     @DisplayName("Проверка проверяемости строки на заполненность")
-    void validVerifyStringRequired() {
+    public void validVerifyStringRequired() {
         Validator validator = new Validator();
         StringSchema stringSchema = validator.string();
         String testMoreThan10Char = "";
@@ -38,7 +38,7 @@ class ApplicationTest {
 
     @Test
     @DisplayName("Проверка проверяемости строки на вхождение")
-    void validVerifyStringStopWord() {
+    public void validVerifyStringStopWord() {
         Validator validator = new Validator();
         StringSchema stringSchema = validator.string();
         String sentenceWithStopWord = "We come for you. No chances";
@@ -52,7 +52,7 @@ class ApplicationTest {
 
     @Test
     @DisplayName("Набор проверок для валидатора чисел")
-    void checkValidIntegerInputs() {
+    public void checkValidIntegerInputs() {
         Validator validator = new Validator();
         NumberSchema numberSchema = validator.number();
         Range range = new Range(10, 29);
@@ -72,7 +72,7 @@ class ApplicationTest {
 
     @Test
     @DisplayName("Набор проверок для валидатора Map")
-    void checkValidMapInputs() {
+    public void checkValidMapInputs() {
         Validator v = new Validator();
 
         MapSchema schema = v.map();
@@ -96,7 +96,7 @@ class ApplicationTest {
 
     @Test
     @DisplayName("Набор проверок для валидатора NestedMap")
-    void checkValidMapInputsWithNested() {
+    public void checkValidMapInputsWithNested() {
         Validator v = new Validator();
         MapSchema schema = v.map();
         Map<String, BaseSchema> schemas = new HashMap<>();
