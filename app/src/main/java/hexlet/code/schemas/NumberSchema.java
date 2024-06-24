@@ -1,10 +1,11 @@
-package hexlet.code;
+package hexlet.code.schemas;
 
 public class NumberSchema extends BaseSchema {
 
     private boolean isRequired = false;
     private boolean isPositive = false;
-    private Range rangeBetween;
+    private int from;
+    private int to;
     public NumberSchema() {
     }
 
@@ -18,13 +19,14 @@ public class NumberSchema extends BaseSchema {
         return this;
     }
 
-    public NumberSchema range(Range range) {
-        this.rangeBetween = range;
+    public NumberSchema range(int fromValue, int toValue) {
+        this.from = fromValue;
+        this.to = toValue;
         return this;
     }
 
     @Override
-    boolean isValid(Object input) {
+    public boolean isValid(Object input) {
         Integer number = (Integer) input;
 
         if (this.isRequired && (number == null)) {
@@ -40,8 +42,8 @@ public class NumberSchema extends BaseSchema {
         }
 
 
-        if (rangeBetween != null) {
-            if (number < this.rangeBetween.getNumFrom() || number > this.rangeBetween.getNumTo()) {
+        if (from != 0 && to != 0) {
+            if (number < this.from || number > this.to) {
                 return false;
             }
         }

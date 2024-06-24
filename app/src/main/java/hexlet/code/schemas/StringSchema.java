@@ -1,4 +1,4 @@
-package hexlet.code;
+package hexlet.code.schemas;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class StringSchema extends BaseSchema {
     }
 
     @Override
-    boolean isValid(Object input) {
+    public boolean isValid(Object input) {
         String message = (String) input;
 
         if (this.isRequired && (message == null || message.isEmpty())) {

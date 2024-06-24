@@ -1,5 +1,9 @@
 package hexlet.code;
 
+import hexlet.code.schemas.BaseSchema;
+import hexlet.code.schemas.MapSchema;
+import hexlet.code.schemas.NumberSchema;
+import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +59,6 @@ public class ApplicationTest {
     public void checkValidIntegerInputs() {
         Validator validator = new Validator();
         NumberSchema numberSchema = validator.number();
-        Range range = new Range(10, 29);
 
         assertThat(numberSchema.isValid(null)).isEqualTo(true);
         numberSchema.required();
@@ -66,7 +69,7 @@ public class ApplicationTest {
         assertThat(numberSchema.isValid(-10)).isEqualTo(false);
 
         assertThat(numberSchema.isValid(30)).isEqualTo(true);
-        numberSchema.range(range);
+        numberSchema.range(10, 29);
         assertThat(numberSchema.isValid(30)).isEqualTo(false);
     }
 
