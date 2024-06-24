@@ -1,15 +1,15 @@
 package hexlet.code.schemas;
 
+import lombok.NoArgsConstructor;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class StringSchema extends BaseSchema {
+@NoArgsConstructor
+public class StringSchema extends BaseSchema<String> {
     private boolean isRequired = false;
-    private int hasMinLength = 0;
-    private final Map<String, String> isContains = new HashMap<>();
-
-    public StringSchema() {
-    }
+    private int minLength = 0;
+    private final Map<String, String> containsMap = new HashMap<>();
 
     public StringSchema required() {
         this.isRequired = true;
@@ -17,29 +17,29 @@ public class StringSchema extends BaseSchema {
     }
 
     public StringSchema minLength(int minLength) {
-        this.hasMinLength = minLength;
+        this.minLength = minLength;
         return this;
     }
 
     public StringSchema contains(String text) {
-        this.isContains.putIfAbsent(text, text);
+        this.containsMap.putIfAbsent(text, text);
         return this;
     }
 
     @Override
-    public boolean isValid(Object input) {
-        String message = (String) input;
-
-        if (this.isRequired && (message == null || message.isEmpty())) {
+    public boolean isValid(String input) {
+        if (isRequired && (input == null || input.isEmpty())) {
             return false;
         }
 
-        if (this.hasMinLength > 0 && message.length() < this.hasMinLength) {
+        if (minLength > 0 && (input == null || input.length() < minLength)) {
             return false;
         }
 
-        for (Map.Entry<String, String> entry: isContains.entrySet()) {
-            return message.contains(entry.getValue());
+        for (Map.Entry<String, String> entry : containsMap.entrySet()) {
+            if (!input.contains(entry.getValue())) {
+                return false;
+            }
         }
 
         return true;
