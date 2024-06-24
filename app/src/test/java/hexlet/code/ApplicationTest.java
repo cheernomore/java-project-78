@@ -55,6 +55,24 @@ public class ApplicationTest {
     }
 
     @Test
+    @DisplayName("Проверка на длину строки и на вхождение")
+    public void fullVerifyStringValidator() {
+        Validator validator = new Validator();
+        StringSchema stringSchema = validator.string();
+        String sentenceWithStopWord = "We come for you. No chances";
+        String sentenceWithoutStopWord = "We for you. No chances";
+
+        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(true);
+        stringSchema.contains("come");
+        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(false);
+        assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(true);
+
+        assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(true);
+        stringSchema.minLength(50);
+        assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(false);
+    }
+
+    @Test
     @DisplayName("Набор проверок для валидатора чисел")
     public void checkValidIntegerInputs() {
         Validator validator = new Validator();
