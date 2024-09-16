@@ -14,7 +14,7 @@ group = "hexlet.code"
 
 version = "1.0-SNAPSHOT"
 
-application { mainClass.set("io.hexlet.Application") }
+application { mainClass.set("hexlet.code.Application") }
 
 repositories { mavenCentral() }
 
@@ -38,17 +38,4 @@ tasks.test {
     }
 }
 
-tasks.test {
-    finalizedBy(tasks.jacocoTestReport)
-}
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-}
-
-tasks.jacocoTestReport {
-    reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
-    }
-}
+tasks.jacocoTestReport { reports { xml.required.set(true) } }
