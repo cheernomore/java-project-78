@@ -120,7 +120,7 @@ public class ApplicationTest {
     public void checkValidMapInputsWithNested() {
         Validator v = new Validator();
         MapSchema schema = v.map();
-        Map<String, BaseSchema> schemas = new HashMap<>();
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
 
         schemas.put("name", v.string().required());
         schemas.put("age", v.number().positive());
