@@ -1,4 +1,4 @@
-name: Java CI
+name: Code Climate
 
 on:
   - push
@@ -17,13 +17,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.7
-      - run: ./gradlew checkstyleMain
-      - run: ./gradlew test
-      # - name: Publish code coverage
-      #   uses: paambaati/codeclimate-action@v9.0.0
-      #   env:
-      #     CC_TEST_REPORTER_ID: ${{secrets.CC_TOKEN}}
-      #     JACOCO_SOURCE_PATH: ${{github.workspace}}/app/src/main/java
-      #   with:
-      #     coverageCommand: make report
-      #     coverageLocations: ${{github.workspace}}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
+      - run: cd app && ./gradlew checkstyleMain
+      - run: cd app && ./gradlew test
+      - name: Publish code coverage
+        uses: paambaati/codeclimate-action@v9.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TOKEN}}
+          JACOCO_SOURCE_PATH: ${{github.workspace}}/app/src/main/java
+        with:
+          coverageCommand: make report
+          coverageLocations: ${{github.workspace}}/app/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
