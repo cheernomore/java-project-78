@@ -3,27 +3,27 @@ package hexlet.code.schemas;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapSchema<T> extends BaseSchema {
+public class MapSchema<T> extends BaseSchema<T> {
 
     private boolean isRequired = false;
     private int size = 0;
 
-    private Map<String, BaseSchema> shapes = new HashMap<>();
+    private Map<String, BaseSchema<T>> shapes = new HashMap<>();
 
     public MapSchema() {
     }
 
-    public MapSchema required() {
+    public MapSchema<T> required() {
         this.isRequired = true;
         return this;
     }
 
-    public MapSchema sizeof(int setSize) {
+    public MapSchema<T> sizeof(int setSize) {
         this.size = setSize;
         return this;
     }
 
-    public MapSchema shape(Map<String, BaseSchema> shape) {
+    public MapSchema<T> shape(Map<String, BaseSchema<T>> shape) {
         this.shapes = shape;
         return this;
     }
@@ -37,10 +37,8 @@ public class MapSchema<T> extends BaseSchema {
             return true;
         }
 
-        if (this.shapes.size() == 0) {
-            if (input instanceof Map) {
-                Map<?, ?> message = (Map<?, ?>) input;
-
+        if (this.shapes.isEmpty()) {
+            if (input instanceof Map<?, ?> message) {
                 for (Map.Entry<?, ?> entry : message.entrySet()) {
                     if (!(entry.getKey() instanceof String) || !(entry.getValue() instanceof String)) {
                         return false;
@@ -61,9 +59,9 @@ public class MapSchema<T> extends BaseSchema {
                     continue;
                 }
 
-                BaseSchema schema = shapes.get(key);
+                BaseSchema<T> schema = shapes.get(key);
 
-                if (!schema.isValid(message.get(key))) {
+                if (!schema.isValid((T) message.get(key))) {
                     return false;
                 }
             }

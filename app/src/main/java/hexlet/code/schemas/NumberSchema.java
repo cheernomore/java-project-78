@@ -37,15 +37,13 @@ public class NumberSchema extends BaseSchema {
             return true;
         }
 
-        if (this.isPositive && (number < 0)) {
+        if (this.isPositive && (number <= 0)) {
             return false;
         }
 
 
         if (from != 0 && to != 0) {
-            if (number < this.from || number > this.to) {
-                return false;
-            }
+            return number >= this.from && number <= this.to;
         }
 
         return true;
