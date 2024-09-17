@@ -9,24 +9,24 @@ public class NumberSchema extends BaseSchema {
     public NumberSchema() {
     }
 
-    public NumberSchema required() {
+    public final NumberSchema required() {
         this.isRequired = true;
         return this;
     }
 
-    public NumberSchema positive() {
+    public final NumberSchema positive() {
         this.isPositive = true;
         return this;
     }
 
-    public NumberSchema range(int fromValue, int toValue) {
+    public final NumberSchema range(int fromValue, int toValue) {
         this.from = fromValue;
         this.to = toValue;
         return this;
     }
 
     @Override
-    public boolean isValid(Object input) {
+    public final boolean isValid(Object input) {
         Integer number = (Integer) input;
 
         if (this.isRequired && (number == null)) {
