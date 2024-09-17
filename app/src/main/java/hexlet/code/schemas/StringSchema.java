@@ -11,23 +11,23 @@ public class StringSchema extends BaseSchema<String> {
     private int minLength = 0;
     private final Map<String, String> containsMap = new HashMap<>();
 
-    public StringSchema required() {
+    public final StringSchema required() {
         this.isRequired = true;
         return this;
     }
 
-    public StringSchema minLength(int minLengthValue) {
+    public final StringSchema minLength(int minLengthValue) {
         this.minLength = minLengthValue;
         return this;
     }
 
-    public StringSchema contains(String text) {
+    public final StringSchema contains(String text) {
         this.containsMap.putIfAbsent(text, text);
         return this;
     }
 
     @Override
-    public boolean isValid(String input) {
+    public final boolean isValid(String input) {
         if (isRequired && (input == null || input.isEmpty())) {
             return false;
         }

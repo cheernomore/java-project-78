@@ -13,23 +13,23 @@ public class MapSchema<T> extends BaseSchema<T> {
     public MapSchema() {
     }
 
-    public MapSchema<T> required() {
+    public final MapSchema<T> required() {
         this.isRequired = true;
         return this;
     }
 
-    public MapSchema<T> sizeof(int setSize) {
+    public final MapSchema<T> sizeof(int setSize) {
         this.size = setSize;
         return this;
     }
 
-    public MapSchema<T> shape(Map<String, BaseSchema<T>> shape) {
+    public final MapSchema<T> shape(Map<String, BaseSchema<T>> shape) {
         this.shapes = shape;
         return this;
     }
 
     @Override
-    public boolean isValid(Object input) {
+    public final boolean isValid(Object input) {
 
         if (this.isRequired && input == null) {
             return false;
