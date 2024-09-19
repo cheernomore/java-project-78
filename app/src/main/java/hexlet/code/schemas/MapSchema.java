@@ -21,7 +21,31 @@ public class MapSchema<T> extends BaseSchema<T> {
         Map<String, String> gr = (Map<String, String>) cs;
         return !gr.isEmpty();
     };
-    private final Predicate<Object> checkShape = shape -> shape instanceof Map<?, ?>;
+    private final Predicate<Object> checkShape = shape -> {
+        if (shape instanceof Map<?, ?> message) {
+            for (Map.Entry<?, ?> entry : message.entrySet()) {
+                if (!(entry.getKey() instanceof String) || !(entry.getValue() instanceof String)) {
+                    return false;
+                }
+            }
+        } else {
+            Map<?, ?> message = (Map<?, ?>) shape;
+
+            for (String key : shapes.keySet()) {
+                if (!message.containsKey(key)) {
+                    continue;
+                }
+
+                BaseSchema<T> schema = shapes.get(key);
+
+                if (!schema.isValid((T) message.get(key))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    };
 
     public final MapSchema<T> required() {
         this.isRequired = true;
