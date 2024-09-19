@@ -49,9 +49,9 @@ public class ApplicationTest {
         String sentenceWithoutStopWord = "We for you. No chances";
 
         assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(true);
-        stringSchema.contains("come");
-        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(false);
         assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(true);
+        stringSchema.contains("come");
+        assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(false);
     }
 
     @Test
@@ -64,10 +64,10 @@ public class ApplicationTest {
 
         assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(true);
         stringSchema.contains("come");
-        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(false);
-        assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(true);
+        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(true);
+        assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(false);
 
-        assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(true);
+        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(true);
         stringSchema.minLength(50);
         assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(false);
     }
@@ -120,7 +120,7 @@ public class ApplicationTest {
     public void checkValidMapInputsWithNested() {
         Validator v = new Validator();
         MapSchema schema = v.map();
-        Map<String, BaseSchema<String>> schemas = new HashMap<>();
+        Map<String, BaseSchema> schemas = new HashMap<>();
 
         schemas.put("name", v.string().required());
         schemas.put("age", v.number().positive());

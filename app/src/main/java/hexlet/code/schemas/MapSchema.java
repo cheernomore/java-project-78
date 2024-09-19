@@ -2,71 +2,39 @@ package hexlet.code.schemas;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
 
-public class MapSchema<T> extends BaseSchema<T> {
+public class MapSchema<T> extends BaseSchema {
 
-    private boolean isRequired = false;
     private int size = 0;
+    private boolean isRequired;
 
-    private Map<String, BaseSchema<T>> shapes = new HashMap<>();
+    private Map<String, BaseSchema> shapes = new HashMap<>();
 
     public MapSchema() {
+        super();
     }
+
+    private final Predicate<Object> required = Objects::isNull;
+    private final Predicate<Object> checkSize = size -> (int) size > this.size;
+    private final Predicate<Object> checkShape = shape -> shape instanceof Map<?,?>;
 
     public final MapSchema<T> required() {
         this.isRequired = true;
+        addCheck(CheckName.IS_REQUIRED, required);
         return this;
     }
 
     public final MapSchema<T> sizeof(int setSize) {
         this.size = setSize;
+        addCheck(CheckName.CHECK_SIZE, checkSize);
         return this;
     }
 
-    public final MapSchema<T> shape(Map<String, BaseSchema<T>> shape) {
+    public final MapSchema<T> shape(Map<String, BaseSchema> shape) {
         this.shapes = shape;
+        addCheck(CheckName.CHECK_SHAPE, checkShape);
         return this;
-    }
-
-    @Override
-    public final boolean isValid(Object input) {
-
-        if (this.isRequired && input == null) {
-            return false;
-        } else if (!this.isRequired && input == null) {
-            return true;
-        }
-
-        if (this.shapes.isEmpty()) {
-            if (input instanceof Map<?, ?> message) {
-                for (Map.Entry<?, ?> entry : message.entrySet()) {
-                    if (!(entry.getKey() instanceof String) || !(entry.getValue() instanceof String)) {
-                        return false;
-                    }
-                }
-
-                if (this.size > 0 && message.size() < this.size) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
-            Map<?, ?> message = (Map<?, ?>) input;
-
-            for (String key : shapes.keySet()) {
-                if (!message.containsKey(key)) {
-                    continue;
-                }
-
-                BaseSchema<T> schema = shapes.get(key);
-
-                if (!schema.isValid((T) message.get(key))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }
