@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 @NoArgsConstructor
-public class StringSchema extends BaseSchema {
+public class StringSchema<T> extends BaseSchema<T> {
     private boolean isRequired = false;
     private int minLength;
     private final Set<String> containsSet = new HashSet<>();
