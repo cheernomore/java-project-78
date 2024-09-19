@@ -1,22 +1,25 @@
 package hexlet.code;
 
+import hexlet.code.schemas.BaseSchema;
 import hexlet.code.schemas.MapSchema;
 import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
+
+import java.util.Map;
 
 public class Validator {
     public Validator() {
     }
 
-    public final StringSchema string() {
-        return new StringSchema();
+    public final StringSchema<String> string() {
+        return new StringSchema<>();
     }
 
-    public final NumberSchema number() {
-        return new NumberSchema();
+    public final NumberSchema<Integer> number() {
+        return new NumberSchema<>();
     }
 
-    public final MapSchema map() {
-        return new MapSchema();
+    public final MapSchema<Map<String, BaseSchema<Map<String, String>>>> map() {
+        return new MapSchema<>();
     }
 }

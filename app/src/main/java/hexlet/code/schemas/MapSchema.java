@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class MapSchema<T> extends BaseSchema {
+public class MapSchema<T> extends BaseSchema<T> {
 
     private int size = 0;
     private boolean isRequired;
 
-    private Map<String, BaseSchema> shapes = new HashMap<>();
+    private Map<String, BaseSchema<T>> shapes = new HashMap<>();
 
     public MapSchema() {
         super();
@@ -35,7 +35,7 @@ public class MapSchema<T> extends BaseSchema {
         return this;
     }
 
-    public final MapSchema<T> shape(Map<String, BaseSchema> shape) {
+    public final MapSchema<T> shape(Map<String, BaseSchema<T>> shape) {
         this.shapes = shape;
         addCheck(CheckName.CHECK_SHAPE, checkShape);
         return this;
