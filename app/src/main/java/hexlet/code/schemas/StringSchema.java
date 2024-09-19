@@ -2,46 +2,42 @@ package hexlet.code.schemas;
 
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @NoArgsConstructor
-public class StringSchema extends BaseSchema<String> {
+public class StringSchema extends BaseSchema {
     private boolean isRequired = false;
-    private int minLength = 0;
-    private final Map<String, String> containsMap = new HashMap<>();
+    private int minLength;
+    private final Set<String> containsSet = new HashSet<>();
+
+    private final Predicate<Object> requiredCheck = number -> this.isRequired && number != null && !number.equals("");
+    private final Predicate<Object> minLengthCheck = str -> str.toString().length() >= minLength;
+    private final Predicate<Object> containsCheck = str -> {
+        for (String entry : containsSet) {
+            if (str.toString().contains(entry)) {
+                return false;
+            }
+        }
+        return true;
+    };
 
     public final StringSchema required() {
         this.isRequired = true;
+        checks.put(CheckName.IS_REQUIRED, requiredCheck);
         return this;
     }
 
     public final StringSchema minLength(int minLengthValue) {
         this.minLength = minLengthValue;
+        checks.put(CheckName.CHECK_MIN_LENGTH, minLengthCheck);
         return this;
     }
 
     public final StringSchema contains(String text) {
-        this.containsMap.putIfAbsent(text, text);
+        this.containsSet.add(text);
+        checks.put(CheckName.CHECK_CONTAINS, containsCheck);
         return this;
-    }
-
-    @Override
-    public final boolean isValid(String input) {
-        if (isRequired && (input == null || input.isEmpty())) {
-            return false;
-        }
-
-        if (minLength > 0 && (input == null || input.length() < minLength)) {
-            return false;
-        }
-
-        for (Map.Entry<String, String> entry : containsMap.entrySet()) {
-            if (!input.contains(entry.getValue())) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
