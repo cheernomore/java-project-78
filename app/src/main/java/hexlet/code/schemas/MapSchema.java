@@ -17,7 +17,10 @@ public class MapSchema<T> extends BaseSchema {
     }
 
     private final Predicate<Object> required = Objects::isNull;
-    private final Predicate<Object> checkSize = checkSize -> (int) checkSize > this.size;
+    private final Predicate<Object> checkSize = cs -> {
+        Map<String, String> gr = (Map<String, String>) cs;
+        return !gr.isEmpty();
+    };
     private final Predicate<Object> checkShape = shape -> shape instanceof Map<?, ?>;
 
     public final MapSchema<T> required() {
