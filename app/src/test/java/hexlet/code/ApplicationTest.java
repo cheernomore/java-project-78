@@ -95,24 +95,32 @@ public class ApplicationTest {
     @DisplayName("Набор проверок для валидатора Map")
     public void checkValidMapInputs() {
         Validator v = new Validator();
+        MapSchema<String> schema = v.map();
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
 
-        MapSchema schema = v.map();
+        // Определяем схемы валидации для значений свойств "firstName" и "lastName"
+        // Имя должно быть строкой, обязательно для заполнения
+        schemas.put("firstName", v.string().required());
+        // Фамилия обязательна для заполнения и должна содержать не менее 2 символов
+        schemas.put("lastName", v.string().required().minLength(2));
 
-        schema.isValid(null); // true
+        schema.shape(schemas);
 
-        schema.required();
+        // Проверяем объекты
+        Map<String, String> human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("lastName", "Smith");
+        schema.isValid(human1); // true
 
-        schema.isValid(null); // false
-        schema.isValid(new HashMap<>()); // true
-        Map<String, String> data = new HashMap<>();
-        data.put("key1", "value1");
-        schema.isValid(data); // true
+        Map<String, String> human2 = new HashMap<>();
+        human2.put("firstName", "John");
+        human2.put("lastName", null);
+        schema.isValid(human2); // false
 
-        schema.sizeof(2);
-
-        schema.isValid(data);  // false
-        data.put("key2", "value2");
-        schema.isValid(data); // true
+        Map<String, String> human3 = new HashMap<>();
+        human3.put("firstName", "Anna");
+        human3.put("lastName", "B");
+        schema.isValid(human3); // false
     }
 
     @Test
