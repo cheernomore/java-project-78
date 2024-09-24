@@ -2,7 +2,7 @@ package hexlet.code.schemas;
 
 import java.util.function.Predicate;
 
-public class NumberSchema<T> extends BaseSchema<T> {
+public class NumberSchema extends BaseSchema {
     private boolean isRequired;
     private boolean isPositive;
     private int from;

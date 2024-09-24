@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class MapSchema<T> extends BaseSchema<T> {
+public class MapSchema extends BaseSchema {
 
     private int size = 0;
     private boolean isRequired;
 
-    private Map<String, BaseSchema<T>> shapes = new HashMap<>();
+    private Map<String, BaseSchema> shapes = new HashMap<>();
 
     public MapSchema() {
         super();
@@ -36,9 +36,9 @@ public class MapSchema<T> extends BaseSchema<T> {
                     continue;
                 }
 
-                BaseSchema<T> schema = shapes.get(key);
+                BaseSchema schema = shapes.get(key);
 
-                if (!schema.isValid((T) message.get(key))) {
+                if (!schema.isValid(message.get(key))) {
                     return false;
                 }
             }
@@ -47,19 +47,19 @@ public class MapSchema<T> extends BaseSchema<T> {
         return true;
     };
 
-    public final MapSchema<T> required() {
+    public final MapSchema required() {
         this.isRequired = true;
         addCheck(CheckName.IS_REQUIRED, required);
         return this;
     }
 
-    public final MapSchema<T> sizeof(int setSize) {
+    public final MapSchema sizeof(int setSize) {
         this.size = setSize;
         addCheck(CheckName.CHECK_SIZE, checkSize);
         return this;
     }
 
-    public final MapSchema<T> shape(Map<String, BaseSchema<T>> shape) {
+    public final MapSchema shape(Map<String, BaseSchema> shape) {
         this.shapes = shape;
         addCheck(CheckName.CHECK_SHAPE, checkShape);
         return this;

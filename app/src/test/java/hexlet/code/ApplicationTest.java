@@ -79,24 +79,27 @@ public class ApplicationTest {
         NumberSchema numberSchema = validator.number();
 
         assertThat(numberSchema.isValid(null)).isEqualTo(true);
+        assertThat(numberSchema.isValid(0)).isEqualTo(true);
         numberSchema.required();
         assertThat(numberSchema.isValid(null)).isEqualTo(false);
 
         assertThat(numberSchema.isValid(-10)).isEqualTo(true);
         numberSchema.positive();
         assertThat(numberSchema.isValid(-10)).isEqualTo(false);
+        assertThat(numberSchema.isValid(0)).isEqualTo(false);
 
         assertThat(numberSchema.isValid(30)).isEqualTo(true);
         numberSchema.range(10, 29);
         assertThat(numberSchema.isValid(30)).isEqualTo(false);
+        assertThat(numberSchema.isValid(9)).isEqualTo(false);
     }
 
     @Test
     @DisplayName("Набор проверок для валидатора Map")
     public void checkValidMapInputs() {
         Validator v = new Validator();
-        MapSchema<String> schema = v.map();
-        Map<String, BaseSchema<String>> schemas = new HashMap<>();
+        MapSchema schema = v.map();
+        Map<String, BaseSchema> schemas = new HashMap<>();
 
         // Определяем схемы валидации для значений свойств "firstName" и "lastName"
         // Имя должно быть строкой, обязательно для заполнения

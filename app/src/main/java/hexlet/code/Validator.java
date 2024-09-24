@@ -8,15 +8,15 @@ public class Validator {
     public Validator() {
     }
 
-    public final StringSchema<String> string() {
-        return new StringSchema<>();
+    public final StringSchema string() {
+        return new StringSchema();
     }
 
-    public final NumberSchema<Integer> number() {
-        return new NumberSchema<>();
+    public final NumberSchema number() {
+        return new NumberSchema();
     }
 
-    public final MapSchema<String> map() {
-        return new MapSchema<>();
+    public final MapSchema map() {
+        return new MapSchema();
     }
 }
