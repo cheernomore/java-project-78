@@ -8,7 +8,7 @@ public abstract class BaseSchema {
     protected Map<CheckName, Predicate<Object>> checks = new LinkedHashMap<>();
 
     protected final void addCheck(CheckName checkName, Predicate<Object> predicate) {
-        this.checks.put(checkName, predicate);
+        this.checks.putIfAbsent(checkName, predicate);
     }
 
     public final boolean isValid(Object value) {

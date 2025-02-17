@@ -10,7 +10,7 @@ public class MapSchema extends BaseSchema {
     private int size = 0;
     private boolean isRequired;
 
-    private Map<String, BaseSchema> shapes = new HashMap<>();
+    private final Map<String, BaseSchema> shapes = new HashMap<>();
 
     public MapSchema() {
         super();
@@ -21,31 +21,8 @@ public class MapSchema extends BaseSchema {
         Map<String, String> gr = (Map<String, String>) cs;
         return !gr.isEmpty();
     };
-    private final Predicate<Object> checkShape = shape -> {
-        if (shape instanceof Map<?, ?> message) {
-            for (Map.Entry<?, ?> entry : message.entrySet()) {
-                if (!(entry.getKey() instanceof String) || !(entry.getValue() instanceof String)) {
-                    return false;
-                }
-            }
-        } else {
-            Map<?, ?> message = (Map<?, ?>) shape;
 
-            for (String key : shapes.keySet()) {
-                if (!message.containsKey(key)) {
-                    continue;
-                }
-
-                BaseSchema schema = shapes.get(key);
-
-                if (!schema.isValid(message.get(key))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    };
+    private final Predicate<Object> checkShape = shape -> shape instanceof MapSchema;
 
     public final MapSchema required() {
         this.isRequired = true;
@@ -60,7 +37,7 @@ public class MapSchema extends BaseSchema {
     }
 
     public final MapSchema shape(Map<String, BaseSchema> shape) {
-        this.shapes = shape;
+        shape.forEach(shapes::putIfAbsent);
         addCheck(CheckName.CHECK_SHAPE, checkShape);
         return this;
     }
