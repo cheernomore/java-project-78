@@ -4,6 +4,7 @@ import hexlet.code.schemas.BaseSchema;
 import hexlet.code.schemas.MapSchema;
 import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,121 +12,125 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ApplicationTest {
-    @Test
-    @DisplayName("Проверка проверяемости длины строки")
-    public void validVerifyStringLength() {
-        Validator validator = new Validator();
-        StringSchema stringSchema = validator.string();
-        String testMoreThan10Char = "We come for you. No chances";
-        String testLessThan10Char = "We";
-        int minLength = 10;
+    private Validator validator;
+    private StringSchema stringSchema;
+    private NumberSchema numberSchema;
+    private MapSchema mapSchema;
 
-        assertThat(stringSchema.isValid(testLessThan10Char)).isEqualTo(true);
-        stringSchema.minLength(minLength);
-        assertThat(stringSchema.isValid(testMoreThan10Char)).isEqualTo(true);
-        assertThat(stringSchema.isValid(testLessThan10Char)).isEqualTo(false);
+    @BeforeEach
+    void setUp() {
+        validator = new Validator();
+        stringSchema = validator.string();
+        numberSchema = validator.number();
+        mapSchema = validator.map();
     }
 
     @Test
-    @DisplayName("Проверка проверяемости строки на заполненность")
-    public void validVerifyStringRequired() {
-        Validator validator = new Validator();
-        StringSchema stringSchema = validator.string();
-        String testMoreThan10Char = "";
+    @DisplayName("Строка: проверка минимальной длины")
+    public void testStringMinLength() {
+        stringSchema.minLength(10);
+        assertThat(stringSchema.isValid("Short")).isFalse();
+        assertThat(stringSchema.isValid("Longer than ten")).isTrue();
+    }
 
-        assertThat(stringSchema.isValid(testMoreThan10Char)).isEqualTo(true);
+    @Test
+    @DisplayName("Строка: проверка обязательного заполнения")
+    public void testStringRequired() {
+        assertThat(stringSchema.isValid("")).isTrue();
         stringSchema.required();
-        assertThat(stringSchema.isValid(testMoreThan10Char)).isEqualTo(false);
+        assertThat(stringSchema.isValid("")).isFalse();
     }
 
     @Test
-    @DisplayName("Проверка проверяемости строки на вхождение")
-    public void validVerifyStringStopWord() {
-        Validator validator = new Validator();
-        StringSchema stringSchema = validator.string();
-        String sentenceWithStopWord = "We come for you. No chances";
-        String sentenceWithoutStopWord = "We for you. No chances";
-
-        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(true);
-        stringSchema.contains("come");
-        assertThat(stringSchema.isValid(sentenceWithoutStopWord)).isEqualTo(false);
-        assertThat(stringSchema.isValid(sentenceWithStopWord)).isEqualTo(true);
+    @DisplayName("Строка: проверка вхождения подстроки")
+    public void testStringContains() {
+        stringSchema.contains("hello");
+        assertThat(stringSchema.isValid("hello world")).isTrue();
+        assertThat(stringSchema.isValid("world")).isFalse();
     }
 
     @Test
-    @DisplayName("Набор проверок для валидатора чисел")
-    public void checkValidIntegerInputs() {
-        Validator validator = new Validator();
-        NumberSchema numberSchema = validator.number();
+    @DisplayName("Число: обязательность, положительность и диапазон")
+    public void testNumberValidations() {
+        assertThat(numberSchema.isValid(null)).isTrue();
+        assertThat(numberSchema.isValid(0)).isTrue();
 
-        assertThat(numberSchema.isValid(null)).isEqualTo(true);
         numberSchema.required();
-        assertThat(numberSchema.isValid(null)).isEqualTo(false);
+        assertThat(numberSchema.isValid(null)).isFalse();
 
-        assertThat(numberSchema.isValid(-10)).isEqualTo(true);
         numberSchema.positive();
-        assertThat(numberSchema.isValid(-10)).isEqualTo(false);
+        assertThat(numberSchema.isValid(-10)).isFalse();
+        assertThat(numberSchema.isValid(10)).isTrue();
 
-        assertThat(numberSchema.isValid(30)).isEqualTo(true);
-        numberSchema.range(10, 29);
-        assertThat(numberSchema.isValid(30)).isEqualTo(false);
+        numberSchema.range(5, 15);
+        assertThat(numberSchema.isValid(4)).isFalse();
+        assertThat(numberSchema.isValid(10)).isTrue();
+        assertThat(numberSchema.isValid(16)).isFalse();
+    }
+    @Test
+    @DisplayName("Map: проверка ограничения по размеру")
+    public void testMapSizeConstraint() {
+        mapSchema.sizeof(2);
+
+        Map<String, Object> emptyMap = new HashMap<>();
+        Map<String, Object> oneElementMap = new HashMap<>();
+        oneElementMap.put("key1", "value1");
+
+        Map<String, Object> twoElementMap = new HashMap<>();
+        twoElementMap.put("key1", "value1");
+        twoElementMap.put("key2", "value2");
+
+        Map<String, Object> threeElementMap = new HashMap<>();
+        threeElementMap.put("key1", "value1");
+        threeElementMap.put("key2", "value2");
+        threeElementMap.put("key3", "value3");
+
+        assertFalse(mapSchema.isValid(emptyMap));
+        assertFalse(mapSchema.isValid(oneElementMap));
+        assertTrue(mapSchema.isValid(twoElementMap));
+        assertTrue(mapSchema.isValid(threeElementMap));
     }
 
-    @Test
-    @DisplayName("Набор проверок для валидатора Map")
-    public void checkValidMapInputs() {
-        Validator v = new Validator();
-
-        MapSchema schema = v.map();
-
-        schema.isValid(null); // true
-
-        schema.required();
-
-        schema.isValid(null); // false
-        schema.isValid(new HashMap<>()); // true
-        Map<String, String> data = new HashMap<>();
-        data.put("key1", "value1");
-        schema.isValid(data); // true
-
-        schema.sizeof(2);
-
-        schema.isValid(data);  // false
-        data.put("key2", "value2");
-        schema.isValid(data); // true
-    }
 
     @Test
-    @DisplayName("Набор проверок для валидатора NestedMap")
-    public void checkValidMapInputsWithNested() {
-        Validator v = new Validator();
-        MapSchema schema = v.map();
+    @DisplayName("Map: проверка соответствия схемам")
+    public void testMapValidation() {
         Map<String, BaseSchema> schemas = new HashMap<>();
+        schemas.put("firstName", validator.string().required());
+        schemas.put("lastName", validator.string().required().minLength(2));
 
-        schemas.put("name", v.string().required());
-        schemas.put("age", v.number().positive());
-        schema.shape(schemas);
+        mapSchema.shape(schemas);
 
-        Map<String, Object> human1 = new HashMap<>();
-        human1.put("name", "Kolya");
-        human1.put("age", 100);
-        schema.isValid(human1); // true
+        Map<String, Object> validMap = Map.of("firstName", "John", "lastName", "Smith");
 
-        Map<String, Object> human2 = new HashMap<>();
-        human2.put("name", "Maya");
-        human2.put("age", null);
-        schema.isValid(human2); // true
+        Map<String, Object> missingRequiredField = new HashMap<>();
+        missingRequiredField.put("firstName", "John");
+        missingRequiredField.put("lastName", null);
 
-        Map<String, Object> human3 = new HashMap<>();
-        human3.put("name", "");
-        human3.put("age", null);
-        schema.isValid(human3); // false
+        Map<String, Object> shortLastName = Map.of("firstName", "Anna", "lastName", "B");
 
-        Map<String, Object> human4 = new HashMap<>();
-        human4.put("name", "Valya");
-        human4.put("age", -5);
-        schema.isValid(human4); // false
+        assertTrue(mapSchema.isValid(validMap));
+        assertFalse(mapSchema.isValid(missingRequiredField));
+        assertFalse(mapSchema.isValid(shortLastName));
+    }
+
+    @Test
+    @DisplayName("Map: проверка вложенных структур")
+    public void testNestedMapValidation() {
+        Map<String, BaseSchema> schemas = new HashMap<>();
+        schemas.put("firstname", validator.string().required());
+        schemas.put("secondName", validator.string().contains("beamer"));
+
+        mapSchema.shape(schemas);
+
+        Map<String, Object> validMap = Map.of("firstname", "scr", "secondName", "beamer");
+        Map<String, Object> invalidMap = Map.of("firstname", "scr", "secondName", "random text");
+
+        assertTrue(mapSchema.isValid(validMap));
+        assertFalse(mapSchema.isValid(invalidMap));
     }
 }
