@@ -99,7 +99,7 @@ public class ApplicationTest {
     @Test
     @DisplayName("Map: проверка соответствия схемам")
     public void testMapValidation() {
-        Map<String, BaseSchema> schemas = new HashMap<>();
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
         schemas.put("firstName", validator.string().required());
         schemas.put("lastName", validator.string().required().minLength(2));
 
@@ -121,7 +121,7 @@ public class ApplicationTest {
     @Test
     @DisplayName("Map: проверка вложенных структур")
     public void testNestedMapValidation() {
-        Map<String, BaseSchema> schemas = new HashMap<>();
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
         schemas.put("firstname", validator.string().required());
         schemas.put("secondName", validator.string().contains("beamer"));
 

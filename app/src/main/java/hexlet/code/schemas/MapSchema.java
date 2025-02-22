@@ -41,7 +41,7 @@ public class MapSchema extends BaseSchema {
         return this;
     }
 
-    public final MapSchema shape(Map<String, BaseSchema> shape) {
+    public final MapSchema shape(Map<String, BaseSchema<String>> shape) {
         shape.forEach(shapes::putIfAbsent);
         addCheck(CheckName.CHECK_SHAPE, checkShape);
         return this;
