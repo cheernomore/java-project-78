@@ -9,15 +9,16 @@ public class MapSchema extends BaseSchema {
     private int size = 0;
     private boolean isRequired;
     private final Map<String, BaseSchema> shapes = new HashMap<>();
-
-    public MapSchema() {super();}
+    public MapSchema() {
+        super();
+    }
 
     private final Predicate<Object> required = map ->
             !isRequired || (map instanceof Map<?, ?> && !((Map<?, ?>) map).isEmpty());
 
     private final Predicate<Object> checkSize = map -> {
         HashMap<String, String> resMap = (HashMap) map;
-        return resMap.size() > size;
+        return resMap.size() >= size;
     };
 
     private final Predicate<Object> checkShape = shape ->

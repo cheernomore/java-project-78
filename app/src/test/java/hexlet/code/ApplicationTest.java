@@ -77,9 +77,17 @@ public class ApplicationTest {
         mapSchema.sizeof(2);
 
         Map<String, Object> emptyMap = new HashMap<>();
-        Map<String, Object> oneElementMap = Map.of("key1", "value1");
-        Map<String, Object> twoElementMap = Map.of("key1", "value1", "key2", "value2");
-        Map<String, Object> threeElementMap = Map.of("key1", "value1", "key2", "value2", "key3", "value3");
+        Map<String, Object> oneElementMap = new HashMap<>();
+        oneElementMap.put("key1", "value1");
+
+        Map<String, Object> twoElementMap = new HashMap<>();
+        twoElementMap.put("key1", "value1");
+        twoElementMap.put("key2", "value2");
+
+        Map<String, Object> threeElementMap = new HashMap<>();
+        threeElementMap.put("key1", "value1");
+        threeElementMap.put("key2", "value2");
+        threeElementMap.put("key3", "value3");
 
         assertFalse(mapSchema.isValid(emptyMap));
         assertFalse(mapSchema.isValid(oneElementMap));
