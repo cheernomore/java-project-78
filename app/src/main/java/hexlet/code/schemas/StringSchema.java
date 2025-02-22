@@ -12,15 +12,15 @@ public class StringSchema extends BaseSchema {
     private int minLength;
     private final Set<String> containsSet = new HashSet<>();
 
-    private final Predicate<Object> requiredCheck = str -> this.isRequired && !str.equals("");
-    private final Predicate<Object> minLengthCheck = str -> str.toString().length() >= minLength;
+    private final Predicate<Object> requiredCheck = str -> isRequired && str != null;  // this.isRequired && (str != null || !str.equals(""));
+    private final Predicate<Object> minLengthCheck = str -> str != null && str.toString().length() >= minLength;
     private final Predicate<Object> containsCheck = str -> {
         for (String entry : containsSet) {
             if (str.toString().contains(entry)) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     };
 
     public final StringSchema required() {

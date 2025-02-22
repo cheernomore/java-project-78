@@ -2,27 +2,31 @@ package hexlet.code.schemas;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 public class MapSchema extends BaseSchema {
 
     private int size = 0;
     private boolean isRequired;
-
     private final Map<String, BaseSchema> shapes = new HashMap<>();
 
-    public MapSchema() {
-        super();
-    }
+    public MapSchema() {super();}
 
-    private final Predicate<Object> required = Objects::isNull;
-    private final Predicate<Object> checkSize = cs -> {
-        Map<String, String> gr = (Map<String, String>) cs;
-        return !gr.isEmpty();
+    private final Predicate<Object> required = map ->
+            !isRequired || (map instanceof Map<?, ?> && !((Map<?, ?>) map).isEmpty());
+
+    private final Predicate<Object> checkSize = map -> {
+        HashMap<String, String> resMap = (HashMap) map;
+        return resMap.size() > size;
     };
 
-    private final Predicate<Object> checkShape = shape -> shape instanceof MapSchema;
+    private final Predicate<Object> checkShape = shape ->
+            shape instanceof Map<?, ?> && shapes.entrySet().stream()
+                    .allMatch(entry -> {
+                        String key = entry.getKey();
+                        BaseSchema schema = entry.getValue();
+                        return schema.isValid(((Map<?, ?>) shape).get(key));
+                    });
 
     public final MapSchema required() {
         this.isRequired = true;
