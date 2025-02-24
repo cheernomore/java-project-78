@@ -74,17 +74,17 @@ public class ApplicationTest {
     @Test
     @DisplayName("Map: проверка ограничения по размеру")
     public void testMapSizeConstraint() {
-        mapSchema.sizeof(2);
+        mapSchema.sizeOf(2);
 
-        Map<String, Object> emptyMap = new HashMap<>();
-        Map<String, Object> oneElementMap = new HashMap<>();
+        Map<String, String> emptyMap = new HashMap<>();
+        Map<String, String> oneElementMap = new HashMap<>();
         oneElementMap.put("key1", "value1");
 
-        Map<String, Object> twoElementMap = new HashMap<>();
+        Map<String, String> twoElementMap = new HashMap<>();
         twoElementMap.put("key1", "value1");
         twoElementMap.put("key2", "value2");
 
-        Map<String, Object> threeElementMap = new HashMap<>();
+        Map<String, String> threeElementMap = new HashMap<>();
         threeElementMap.put("key1", "value1");
         threeElementMap.put("key2", "value2");
         threeElementMap.put("key3", "value3");
@@ -105,13 +105,13 @@ public class ApplicationTest {
 
         mapSchema.shape(schemas);
 
-        Map<String, Object> validMap = Map.of("firstName", "John", "lastName", "Smith");
+        Map<String, String> validMap = Map.of("firstName", "John", "lastName", "Smith");
 
-        Map<String, Object> missingRequiredField = new HashMap<>();
+        Map<String, String> missingRequiredField = new HashMap<>();
         missingRequiredField.put("firstName", "John");
         missingRequiredField.put("lastName", null);
 
-        Map<String, Object> shortLastName = Map.of("firstName", "Anna", "lastName", "B");
+        Map<String, String> shortLastName = Map.of("firstName", "Anna", "lastName", "B");
 
         assertTrue(mapSchema.isValid(validMap));
         assertFalse(mapSchema.isValid(missingRequiredField));
@@ -127,8 +127,8 @@ public class ApplicationTest {
 
         mapSchema.shape(schemas);
 
-        Map<String, Object> validMap = Map.of("firstname", "scr", "secondName", "beamer");
-        Map<String, Object> invalidMap = Map.of("firstname", "scr", "secondName", "random text");
+        Map<String, String> validMap = Map.of("firstname", "scr", "secondName", "beamer");
+        Map<String, String> invalidMap = Map.of("firstname", "scr", "secondName", "random text");
 
         assertTrue(mapSchema.isValid(validMap));
         assertFalse(mapSchema.isValid(invalidMap));

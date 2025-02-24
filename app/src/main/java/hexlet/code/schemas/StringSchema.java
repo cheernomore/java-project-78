@@ -7,16 +7,16 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 @NoArgsConstructor
-public class StringSchema extends BaseSchema {
+public class StringSchema extends BaseSchema<String> {
     private boolean isRequired = false;
     private int minLength;
     private final Set<String> containsSet = new HashSet<>();
 
-    private final Predicate<Object> requiredCheck = str -> isRequired && str != null && !str.equals("");
-    private final Predicate<Object> minLengthCheck = str -> str != null && str.toString().length() >= minLength;
-    private final Predicate<Object> containsCheck = str -> {
+    private final Predicate<String> requiredCheck = str -> isRequired && str != null && !str.isEmpty();
+    private final Predicate<String> minLengthCheck = str -> str != null && str.length() >= minLength;
+    private final Predicate<String> containsCheck = str -> {
         for (String entry : containsSet) {
-            if (str.toString().contains(entry)) {
+            if (str.contains(entry)) {
                 return true;
             }
         }

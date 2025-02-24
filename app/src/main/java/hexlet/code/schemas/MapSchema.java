@@ -4,29 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class MapSchema extends BaseSchema {
+public class MapSchema extends BaseSchema<Map<String, String>> {
 
     private int size = 0;
     private boolean isRequired;
-    private final Map<String, BaseSchema> shapes = new HashMap<>();
+    private final Map<String, BaseSchema<String>> shapes = new HashMap<>();
     public MapSchema() {
         super();
     }
 
-    private final Predicate<Object> required = map ->
-            !isRequired || (map instanceof Map<?, ?> && !((Map<?, ?>) map).isEmpty());
+    private final Predicate<Map<String, String>> required = map -> !isRequired || (map != null && !map.isEmpty());
 
-    private final Predicate<Object> checkSize = map -> {
+    private final Predicate<Map<String, String>> checkSize = map -> {
         HashMap<String, String> resMap = (HashMap) map;
         return resMap.size() >= size;
     };
 
-    private final Predicate<Object> checkShape = shape ->
-            shape instanceof Map<?, ?> && shapes.entrySet().stream()
+    private final Predicate<Map<String, String>> checkShape = shape ->
+            shapes.entrySet().stream()
                     .allMatch(entry -> {
                         String key = entry.getKey();
-                        BaseSchema schema = entry.getValue();
-                        return schema.isValid(((Map<?, ?>) shape).get(key));
+                        BaseSchema<String> schema = entry.getValue();
+                        return schema.isValid(shape.get(key));
                     });
 
     public final MapSchema required() {
@@ -35,7 +34,7 @@ public class MapSchema extends BaseSchema {
         return this;
     }
 
-    public final MapSchema sizeof(int setSize) {
+    public final MapSchema sizeOf(int setSize) {
         this.size = setSize;
         addCheck(CheckName.CHECK_SIZE, checkSize);
         return this;

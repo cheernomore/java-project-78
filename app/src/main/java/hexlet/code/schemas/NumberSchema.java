@@ -2,7 +2,7 @@ package hexlet.code.schemas;
 
 import java.util.function.Predicate;
 
-public class NumberSchema extends BaseSchema {
+public class NumberSchema extends BaseSchema<Integer> {
     private boolean isRequired;
     private boolean isPositive;
     private int from;
@@ -11,9 +11,10 @@ public class NumberSchema extends BaseSchema {
     public NumberSchema() {
         super();
     }
-    private final Predicate<Object> requiredCheck = number -> this.isRequired && number != null;
-    private final Predicate<Object> positiveCheck = num -> (int) num > 0;
-    private final Predicate<Object> rangeCheck = number -> (int) number >= this.from && (int) number <= this.to;
+    private final Predicate<Integer> requiredCheck = number -> this.isRequired && number != null;
+    private final Predicate<Integer> positiveCheck = num -> num > 0;
+    private final Predicate<Integer> rangeCheck = number -> number >= this.from && number <= this.to;
+
     public final NumberSchema required() {
         this.isRequired = true;
         checks.put(CheckName.IS_REQUIRED, requiredCheck);
