@@ -74,7 +74,7 @@ public class ApplicationTest {
     @Test
     @DisplayName("Map: проверка ограничения по размеру")
     public void testMapSizeConstraint() {
-        mapSchema.sizeOf(2);
+        mapSchema.sizeof(2);
 
         Map<String, String> emptyMap = new HashMap<>();
         Map<String, String> oneElementMap = new HashMap<>();
