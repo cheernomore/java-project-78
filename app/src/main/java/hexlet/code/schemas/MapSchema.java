@@ -4,27 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class MapSchema extends BaseSchema<Map<String, String>> {
+public class MapSchema<T> extends BaseSchema<Map<String, T>> {
 
     private int size = 0;
     private boolean isRequired;
-    private final Map<String, BaseSchema<String>> shapes = new HashMap<>();
+    private final Map<String, BaseSchema<T>> shapes = new HashMap<>();
     public MapSchema() {
         super();
     }
 
-    private final Predicate<Map<String, String>> required = map -> !isRequired || (map != null && !map.isEmpty());
+    private final Predicate<Map<String, T>> required = map -> !isRequired || (map != null && !map.isEmpty());
 
-    private final Predicate<Map<String, String>> checkSize = map -> {
+    private final Predicate<Map<String, T>> checkSize = map -> {
         HashMap<String, String> resMap = (HashMap) map;
         return resMap.size() >= size;
     };
 
-    private final Predicate<Map<String, String>> checkShape = shape ->
+    private final Predicate<Map<String, T>> checkShape = shape ->
             shapes.entrySet().stream()
                     .allMatch(entry -> {
                         String key = entry.getKey();
-                        BaseSchema<String> schema = entry.getValue();
+                        BaseSchema<T> schema = entry.getValue();
                         return schema.isValid(shape.get(key));
                     });
 
@@ -40,7 +40,7 @@ public class MapSchema extends BaseSchema<Map<String, String>> {
         return this;
     }
 
-    public final MapSchema shape(Map<String, BaseSchema<String>> shape) {
+    public final MapSchema shape(Map<String, BaseSchema<T>> shape) {
         shape.forEach(shapes::putIfAbsent);
         addCheck(CheckName.CHECK_SHAPE, checkShape);
         return this;
