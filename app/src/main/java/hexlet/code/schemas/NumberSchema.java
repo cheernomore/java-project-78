@@ -11,26 +11,30 @@ public class NumberSchema extends BaseSchema<Integer> {
     public NumberSchema() {
         super();
     }
-    private final Predicate<Integer> requiredCheck = number -> this.isRequired && number != null;
-    private final Predicate<Integer> positiveCheck = num -> num > 0;
-    private final Predicate<Integer> rangeCheck = number -> number >= this.from && number <= this.to;
+    private final Predicate<Integer> isRequiredAndNotNull = number -> this.isRequired && number != null;
+    private final Predicate<Integer> isPositiveAndGreaterThanZero = num -> isPositive && num > 0;
+    private final Predicate<Integer> inRange = this::isInRange;
 
     public final NumberSchema required() {
         this.isRequired = true;
-        checks.put(CheckName.IS_REQUIRED, requiredCheck);
+        checks.put(CheckName.IS_REQUIRED, isRequiredAndNotNull);
         return this;
     }
 
     public final NumberSchema positive() {
         this.isPositive = true;
-        checks.put(CheckName.CHECK_POSITIVE, positiveCheck);
+        checks.put(CheckName.CHECK_POSITIVE, isPositiveAndGreaterThanZero);
         return this;
     }
 
     public final NumberSchema range(int fromValue, int toValue) {
         this.from = fromValue;
         this.to = toValue;
-        checks.put(CheckName.CHECK_RANGE, rangeCheck);
+        checks.put(CheckName.CHECK_RANGE, inRange);
         return this;
+    }
+
+    public final boolean isInRange(int num) {
+        return num >= from && num <= to;
     }
 }
