@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class MapSchema extends BaseSchema<Map<String, ?>> {
+public class MapSchema extends BaseSchema<Map<String, String>> {
 
     private int size = 0;
     private boolean isRequired;
@@ -13,9 +13,10 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         super();
     }
 
-    private final Predicate<Map<String, ?>> isRequiredAndNotNull = map -> isRequired && (map != null && !map.isEmpty());
-    private final Predicate<Map<String, ?>> checkSize = map -> map.size() <= size;
-    private final Predicate<Map<String, ?>> checkShape = shape ->
+    private final Predicate<Map<String, String>> isRequiredAndNotNull =
+            map -> isRequired && (map != null && !map.isEmpty());
+    private final Predicate<Map<String, String>> checkSize = map -> map.size() <= size;
+    private final Predicate<Map<String, String>> checkShape = shape ->
             shapes.entrySet().stream()
                     .allMatch(entry -> {
                         String key = entry.getKey();
@@ -35,7 +36,7 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         return this;
     }
 
-    public final MapSchema shape(Map<String, BaseSchema<?>> shape) {
+    public final MapSchema shape(Map<String, BaseSchema<String>> shape) {
         shape.forEach(shapes::putIfAbsent);
         addCheck(CheckName.CHECK_SHAPE, checkShape);
         return this;

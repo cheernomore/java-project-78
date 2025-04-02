@@ -82,8 +82,8 @@ public class ApplicationTest {
     public void mapSizeTest() {
         final int mapSize = 1;
 
-        final Map<String, Object> emptyMap = Map.of();
-        final Map<String, Object> testMap = Map.of("firstName", "Ever", "lastname", "greatest");
+        final Map<String, String> emptyMap = Map.of();
+        final Map<String, String> testMap = Map.of("firstName", "Ever", "lastname", "greatest");
 
         assertTrue(mapSchema.isValid(emptyMap));
         mapSchema.required();
@@ -97,7 +97,7 @@ public class ApplicationTest {
     @Test
     @DisplayName("Map: проверка вложенных схем")
     public void shapeMapTest() {
-        Map<String, BaseSchema<?>> schemas = new HashMap<>();
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
 
         schemas.put("firstName", validator.string().required());
         schemas.put("lastName", validator.string().required().minLength(2));
