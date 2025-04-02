@@ -90,7 +90,7 @@ public class ApplicationTest {
         assertFalse(mapSchema.isValid(emptyMap));
 
         assertTrue(mapSchema.isValid(testMap));
-        mapSchema.sizeOf(mapSize);
+        mapSchema.sizeof(mapSize);
         assertFalse(mapSchema.isValid(testMap));
     }
 

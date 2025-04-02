@@ -29,7 +29,7 @@ public class MapSchema extends BaseSchema<Map<String, ?>> {
         return this;
     }
 
-    public final MapSchema sizeOf(int setSize) {
+    public final MapSchema sizeof(int setSize) {
         this.size = setSize;
         addCheck(CheckName.CHECK_SIZE, checkSize);
         return this;
