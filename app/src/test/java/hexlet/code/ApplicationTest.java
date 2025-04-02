@@ -43,6 +43,13 @@ public class ApplicationTest {
         stringSchema.contains("hello");
         assertThat(stringSchema.isValid("hello world")).isTrue();
         assertThat(stringSchema.isValid("world")).isFalse();
+
+        assertTrue(stringSchema.contains("wh").isValid("what does the fox say")); // true
+        assertTrue(stringSchema.contains("what").isValid("what does the fox say")); // true
+        assertFalse(stringSchema.contains("whatthe").isValid("what does the fox say")); // false
+
+        var schema1 = validator.string();
+        assertTrue(schema1.minLength(10).minLength(4).isValid("Hexlet"));
     }
 
     @Test
@@ -61,6 +68,7 @@ public class ApplicationTest {
         assertTrue(numberSchema.isValid(negativeTestValue));
         numberSchema.positive();
         assertFalse(numberSchema.isValid(negativeTestValue));
+        assertTrue(numberSchema.isValid(null));
     }
 
     @Test
@@ -80,18 +88,44 @@ public class ApplicationTest {
     @Test
     @DisplayName("Map: проверка ограничения по размеру и обязательность")
     public void mapSizeTest() {
-        final int mapSize = 1;
+        final int mapSize = 2;
 
         final Map<String, String> emptyMap = Map.of();
-        final Map<String, String> testMap = Map.of("firstName", "Ever", "lastname", "greatest");
+        final Map<String, String> testMapSizeTwo = Map.of("firstName", "Ever", "lastname", "greatest");
+        final Map<String, String> testMapSizeThree = Map.of("firstName", "Ever", "lastname", "greatest",
+                "three", "way");
 
-        assertTrue(mapSchema.isValid(emptyMap));
+        assertTrue(mapSchema.isValid(null));
         mapSchema.required();
-        assertFalse(mapSchema.isValid(emptyMap));
+        assertFalse(mapSchema.isValid(null));
+        assertTrue(mapSchema.isValid(emptyMap));
 
-        assertTrue(mapSchema.isValid(testMap));
+        assertTrue(mapSchema.isValid(testMapSizeTwo));
         mapSchema.sizeof(mapSize);
-        assertFalse(mapSchema.isValid(testMap));
+        assertFalse(mapSchema.isValid(testMapSizeThree));
+    }
+
+    @Test
+    @DisplayName("hexlet map test")
+    public void hexletMapTest() {
+        var schema = validator.map();
+
+        assertTrue(schema.isValid(null)); // true
+
+        schema.required();
+
+        assertFalse(schema.isValid(null)); // false
+
+        assertTrue(schema.isValid(new HashMap<>())); // true
+        var data = new HashMap<String, String>();
+        data.put("key1", "value1");
+        assertTrue(schema.isValid(data)); // true
+
+        schema.sizeof(2);
+
+        assertFalse(schema.isValid(data));  // false
+        data.put("key2", "value2");
+        assertTrue(schema.isValid(data)); // true
     }
 
     @Test
@@ -118,6 +152,5 @@ public class ApplicationTest {
         human3.put("firstName", "Anna");
         human3.put("lastName", "B");
         assertFalse(mapSchema.isValid(human3));
-
     }
 }

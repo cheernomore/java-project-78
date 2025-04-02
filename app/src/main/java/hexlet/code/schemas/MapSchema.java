@@ -5,17 +5,15 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public class MapSchema extends BaseSchema<Map<String, String>> {
-
     private int size = 0;
-    private boolean isRequired;
     private final Map<String, BaseSchema<?>> shapes = new HashMap<>();
     public MapSchema() {
         super();
     }
 
     private final Predicate<Map<String, String>> isRequiredAndNotNull =
-            map -> isRequired && (map != null && !map.isEmpty());
-    private final Predicate<Map<String, String>> checkSize = map -> map.size() <= size;
+            map -> required && (map != null);
+    private final Predicate<Map<String, String>> checkSize = map -> map.size() == size;
     private final Predicate<Map<String, String>> checkShape = shape ->
             shapes.entrySet().stream()
                     .allMatch(entry -> {
@@ -25,7 +23,7 @@ public class MapSchema extends BaseSchema<Map<String, String>> {
                     });
 
     public final MapSchema required() {
-        this.isRequired = true;
+        required = true;
         addCheck(CheckName.IS_REQUIRED, isRequiredAndNotNull);
         return this;
     }
