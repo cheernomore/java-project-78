@@ -2,46 +2,32 @@ package hexlet.code.schemas;
 
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.function.Predicate;
 
 @NoArgsConstructor
 public class StringSchema extends BaseSchema<String> {
-    private boolean isRequired = false;
-    private int minLength = 0;
-    private final Map<String, String> containsMap = new HashMap<>();
+    private int minLength;
+    private String containsWord;
+
+    private final Predicate<String> isRequiredAndNotEmpty = str -> required && str != null && !str.isEmpty();
+    private final Predicate<String> hasMinLengthAndNotNull = str -> str != null && str.length() >= minLength;
+    private final Predicate<String> shouldContains = str -> str.contains(containsWord);
 
     public final StringSchema required() {
-        this.isRequired = true;
+        addCheck(CheckName.IS_REQUIRED, isRequiredAndNotEmpty);
+        required = true;
         return this;
     }
 
     public final StringSchema minLength(int minLengthValue) {
+        addCheck(CheckName.CHECK_MIN_LENGTH, hasMinLengthAndNotNull);
         this.minLength = minLengthValue;
         return this;
     }
 
     public final StringSchema contains(String text) {
-        this.containsMap.putIfAbsent(text, text);
+        addCheck(CheckName.CHECK_CONTAINS, shouldContains);
+        containsWord = text;
         return this;
-    }
-
-    @Override
-    public final boolean isValid(String input) {
-        if (isRequired && (input == null || input.isEmpty())) {
-            return false;
-        }
-
-        if (minLength > 0 && (input == null || input.length() < minLength)) {
-            return false;
-        }
-
-        for (Map.Entry<String, String> entry : containsMap.entrySet()) {
-            if (!input.contains(entry.getValue())) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

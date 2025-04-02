@@ -1,51 +1,39 @@
 package hexlet.code.schemas;
 
-public class NumberSchema extends BaseSchema {
+import java.util.function.Predicate;
 
-    private boolean isRequired = false;
-    private boolean isPositive = false;
+public class NumberSchema extends BaseSchema<Integer> {
+    private boolean isPositive;
     private int from;
     private int to;
+
     public NumberSchema() {
+        super();
     }
+    private final Predicate<Integer> isRequiredAndNotNull = number -> required && number != null;
+    private final Predicate<Integer> isPositiveAndGreaterThanZero = num -> num == null || (isPositive && num > 0);
+    private final Predicate<Integer> inRange = this::isInRange;
 
     public final NumberSchema required() {
-        this.isRequired = true;
+        required = true;
+        checks.put(CheckName.IS_REQUIRED, isRequiredAndNotNull);
         return this;
     }
 
     public final NumberSchema positive() {
         this.isPositive = true;
+        checks.put(CheckName.CHECK_POSITIVE, isPositiveAndGreaterThanZero);
         return this;
     }
 
     public final NumberSchema range(int fromValue, int toValue) {
         this.from = fromValue;
         this.to = toValue;
+        checks.put(CheckName.CHECK_RANGE, inRange);
         return this;
     }
 
-    @Override
-    public final boolean isValid(Object input) {
-        Integer number = (Integer) input;
-
-        if (this.isRequired && (number == null)) {
-            return false;
-        }
-
-        if (!this.isRequired && (number == null)) {
-            return true;
-        }
-
-        if (this.isPositive && (number <= 0)) {
-            return false;
-        }
-
-
-        if (from != 0 && to != 0) {
-            return number >= this.from && number <= this.to;
-        }
-
-        return true;
+    public final boolean isInRange(int num) {
+        return num >= from && num <= to;
     }
 }
